@@ -30,12 +30,9 @@ public class Move_State : State
         rb.velocity = movement * moveSpeed;
     }
 
-    /// <summary>
-    /// Testing XML heirarchy interaction
-    /// </summary>
     public override void Exit()
     {
-        base.Exit();
         Debug.Log("Exiting Move State");
+        base.Exit();
     }
 }

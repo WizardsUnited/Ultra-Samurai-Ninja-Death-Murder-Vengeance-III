@@ -1,9 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class State : MonoBehaviour
 {
+    protected bool m_isLocked = false;
+    public bool GetIsLocked() { return m_isLocked; }
+
+    public Action OnExit;
+
     public virtual void Enter()
     {
 
@@ -18,9 +24,13 @@ public class State : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// base.Exit() MUST GO LAST!   
+    /// --- base.Exit() invokes callback and the script will be taken out of the execution loop before the remainder can be called.
+    /// </summary>
     public virtual void Exit()
     {
-
+        OnExit?.Invoke();
     }
 }
 

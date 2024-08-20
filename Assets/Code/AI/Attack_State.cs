@@ -14,6 +14,11 @@ public class Attack_State : State
         else { Debug.Log("ERROR: AttackInProgress: " + attackType + ". \nTried to SetAttackType to: " + _attackType); }
     }
 
+    private void Awake()
+    {
+        m_isLocked = true;
+    }
+
     public override void Enter()
     {
         base.Enter();
@@ -31,14 +36,18 @@ public class Attack_State : State
         {
             isAttackFinished = attackType.ExecuteAttack();
         }
+        if (isAttackFinished)
+        {
+            Exit();
+        }
     }
 
     public override void Exit()
     {
-        base.Exit();
-        Debug.Log("Exiting Attack State");
-
         isAttackStarted = false;
         isAttackFinished = false;
+
+        Debug.Log("Exiting Attack State");
+        base.Exit();
     }
 }

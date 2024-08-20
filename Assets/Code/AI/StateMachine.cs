@@ -38,7 +38,10 @@ public class StateMachine : MonoBehaviour
             Log.Warning("Move NOT Found. " + gameObject.name);
 
         if (attack = GetComponent<Attack_State>())
+        {
             Log.Good("Attack Found. " + gameObject.name);
+            attack.OnExit += OnLockedStateExit;
+        }
         else
             Log.Warning("Attack NOT Found. " + gameObject.name);
 
@@ -60,12 +63,21 @@ public class StateMachine : MonoBehaviour
 
     protected virtual void ChangeState(State newState)
     {
-        if (newState != currentState)
+        if(!currentState.GetIsLocked()) // if (unlocked state) { switch freely }
         {
-            currentState.Exit();
-            currentState = newState;
-            currentState.Enter();
-        } 
+            if (newState != currentState) // Change state may be called more times than neccersary 
+            {
+                currentState.Exit();
+                currentState = newState;
+                currentState.Enter();
+            }
+        }
+    }
+
+    private void OnLockedStateExit()
+    {
+        currentState = idle;
+        currentState.Enter();
     }
 
     protected virtual void Update()
