@@ -1,14 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using AttackTypes;
+using Dbug;
 
 public class StateMachine : MonoBehaviour
 {
     #region ALL POSSIBLE STATES
     /* Do not need to fill all, Start will fill all that an object contains
      */
-    protected Idle_State idle;
-    protected Move_State move;
+    protected Idle_State idle; //unlocked
+    protected Move_State move; //unlocked
+    //attack (soft-)locked (cancellable?)
+    protected IAttackType m_swordLightAttack, m_swordHeavyAttack;
+    protected Attack_State attack;
+    //dash (/roll, long iframes) locked
+    //evade (sidestep, short iframes) locked
+    //block \/
+    //parry /\
     #endregion
 
     /// <summary>
@@ -19,19 +28,24 @@ public class StateMachine : MonoBehaviour
     private void Start()
     {
         if (idle = GetComponent<Idle_State>())
-            Debug.Log("Idle Found");
+            Log.Good("Idle found. " + gameObject.name);
         else
-            Debug.Log("Idle NOT Found");
+            Log.Warning("Idle NOT Found. " + gameObject.name);
 
         if (move = GetComponent<Move_State>())
-            Debug.Log("Move Found");
+            Log.Good("Move Found. " + gameObject.name);
         else
-            Debug.Log("Move NOT Found");
+            Log.Warning("Move NOT Found. " + gameObject.name);
+
+        if (attack = GetComponent<Attack_State>())
+            Log.Good("Attack Found. " + gameObject.name);
+        else
+            Log.Warning("Attack NOT Found. " + gameObject.name);
 
         if (idle != null)
             Initialize(idle);
         else
-            Debug.Log("FAILED TO INITIALIZE: Idle NOT Found");
+            Log.Warning("FAILED TO INITIALIZE: Idle NOT Found. " + gameObject.name);
     }
 
 
@@ -40,6 +54,8 @@ public class StateMachine : MonoBehaviour
     {
         currentState = initialState;
         currentState.Enter();
+        m_swordLightAttack = new SwordLightAttack();
+        m_swordHeavyAttack = new SwordHeavyAttack();
     }
 
     protected virtual void ChangeState(State newState)
