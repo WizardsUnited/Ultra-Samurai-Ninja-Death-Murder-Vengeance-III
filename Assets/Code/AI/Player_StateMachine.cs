@@ -5,8 +5,9 @@ using UnityEngine.UIElements;
 
 public class Player_StateMachine : StateMachine
 {
+    #region VARIABLES
     private Vector3 movement;
-
+    #endregion
 
 
     public override void Initialize(State initialState)
@@ -27,10 +28,21 @@ public class Player_StateMachine : StateMachine
         float moveZ = Input.GetAxisRaw("Vertical");
 
         movement = new Vector3(moveX, 0.0f, moveZ).normalized;
-        if (movement.magnitude > 0.0f)
+
+        if (Input.GetMouseButtonDown(0))
         {
-            ChangeState(move);
+            attack.SetAttackType(m_swordLightAttack);
+            ChangeState(attack);
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            attack.SetAttackType(m_swordHeavyAttack);
+            ChangeState(attack);
+        }
+        else if (movement.magnitude > 0.0f)
+        {
             move.SetMovementVector(movement);
+            ChangeState(move);        
         }
         else
         {

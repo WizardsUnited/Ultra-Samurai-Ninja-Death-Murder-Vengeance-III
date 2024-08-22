@@ -17,8 +17,8 @@ public class Idle_State : State
     }
 
     public override void Exit() 
-    { 
-        base.Exit();
+    {
         Debug.Log("Exiting Idle State");
+        base.Exit();    
     }
 }
