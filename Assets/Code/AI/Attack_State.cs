@@ -8,6 +8,7 @@ public class Attack_State : State
     private bool isAttackStarted = false;
     private bool isAttackFinished = false;
     private IAttackType attackType;
+
     public void SetAttackType(IAttackType _attackType)
     {
         if (!isAttackStarted) { attackType = _attackType; }
@@ -27,17 +28,23 @@ public class Attack_State : State
         isAttackStarted = true;
     }
 
+    float timer = 0;
+
     public override void Execute()
     {
         base.Execute();
         Debug.Log("Executing Attack State");
 
-        if (attackType != null && !isAttackFinished) 
+        timer += Time.deltaTime;
+
+        //if (attackType != null && !isAttackFinished) 
+        //{
+        //    isAttackFinished = attackType.ExecuteAttack();
+        //}
+
+        if (timer >= 1f)
         {
-            isAttackFinished = attackType.ExecuteAttack();
-        }
-        if (isAttackFinished)
-        {
+            timer = 0f;
             Exit();
         }
     }

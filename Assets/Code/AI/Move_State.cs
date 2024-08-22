@@ -27,6 +27,7 @@ public class Move_State : State
         base.Execute();
         Debug.Log("Executing Move State");
 
+        //print(movement);
         rb.velocity = movement * moveSpeed;
     }
 

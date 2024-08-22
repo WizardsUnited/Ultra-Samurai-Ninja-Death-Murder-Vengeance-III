@@ -14,6 +14,13 @@ public class StateMachine : MonoBehaviour
     //attack (soft-)locked (cancellable?)
     protected IAttackType m_swordLightAttack, m_swordHeavyAttack;
     protected Attack_State attack;
+
+    protected Evade_State evade;
+    protected Roll_State roll;
+    protected Block_State block;
+    protected Hit_State hit;
+
+
     //dash (/roll, long iframes) locked
     //evade (sidestep, short iframes) locked
     //block \/
@@ -43,7 +50,41 @@ public class StateMachine : MonoBehaviour
             attack.OnExit += OnLockedStateExit;
         }
         else
+        {
             Log.Warning("Attack NOT Found. " + gameObject.name);
+        }
+
+        if (evade = GetComponent<Evade_State>())
+        {
+            Log.Good("Evade Found. " + gameObject.name);
+            evade.OnExit += OnLockedStateExit;
+        }
+        else
+            Log.Warning("Evade NOT Found. " + gameObject.name);
+
+        if (roll = GetComponent<Roll_State>())
+        {
+            Log.Good("Roll Found. " + gameObject.name);
+            roll.OnExit += OnLockedStateExit;
+        }
+        else
+            Log.Warning("Roll NOT Found. " + gameObject.name);
+
+        if (block = GetComponent<Block_State>())
+        {
+            Log.Good("Block Found. " + gameObject.name);
+            block.OnExit += OnLockedStateExit;
+        }
+        else
+            Log.Warning("Block NOT Found. " + gameObject.name);
+
+        if (hit = GetComponent<Hit_State>())
+        {
+            Log.Good("Hit Found. " + gameObject.name);
+            hit.OnExit += OnLockedStateExit;
+        }
+        else
+            Log.Warning("Hit NOT Found. " + gameObject.name);
 
         if (idle != null)
             Initialize(idle);
@@ -63,7 +104,7 @@ public class StateMachine : MonoBehaviour
 
     protected virtual void ChangeState(State newState)
     {
-        if(!currentState.GetIsLocked()) // if (unlocked state) { switch freely }
+        if (!currentState.GetIsLocked()) // if (unlocked state) { switch freely }
         {
             if (newState != currentState) // Change state may be called more times than neccersary 
             {
@@ -82,7 +123,7 @@ public class StateMachine : MonoBehaviour
 
     protected virtual void Update()
     {
-        
+
     }
 
     protected virtual void FixedUpdate()

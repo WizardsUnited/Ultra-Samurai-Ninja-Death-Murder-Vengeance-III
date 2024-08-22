@@ -29,6 +29,7 @@ public class Player_StateMachine : StateMachine
 
         movement = new Vector3(moveX, 0.0f, moveZ).normalized;
 
+
         if (Input.GetMouseButtonDown(0))
         {
             attack.SetAttackType(m_swordLightAttack);
@@ -39,10 +40,29 @@ public class Player_StateMachine : StateMachine
             attack.SetAttackType(m_swordHeavyAttack);
             ChangeState(attack);
         }
+        //roll
+        else if (Input.GetKeyDown(KeyCode.R)) {
+            ChangeState(roll);
+        }
+        //block/parry
+        else if (Input.GetKey(KeyCode.E))
+        {
+            ChangeState(block);
+        }
+        //evade
+        else if (Input.GetKeyDown(KeyCode.Q))
+        {
+            ChangeState(evade);
+        }
+        //hit
+        else if (Input.GetKeyDown(KeyCode.H))
+        {
+            ChangeState(hit);
+        }
         else if (movement.magnitude > 0.0f)
         {
             move.SetMovementVector(movement);
-            ChangeState(move);        
+            ChangeState(move);
         }
         else
         {
