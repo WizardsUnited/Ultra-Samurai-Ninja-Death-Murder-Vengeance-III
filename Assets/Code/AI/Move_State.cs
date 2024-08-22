@@ -31,6 +31,7 @@ public class Move_State : State
 
         //print(movement);
         rb.velocity = movement * moveSpeed;
+        transform.forward = movement.normalized;
     }
 
     public override void Exit()
