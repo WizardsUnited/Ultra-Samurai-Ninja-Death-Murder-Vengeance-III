@@ -5,8 +5,10 @@ using UnityEngine;
 public class Player_Move_State : Move_State
 {
     /// <summary>
-    /// Testing XML heirarchy interaction
+    /// Test summary
     /// </summary>
+    /// <param name=""></param>
+    /// <returns></returns>
     public override void Enter()
     {
         base.Enter();
