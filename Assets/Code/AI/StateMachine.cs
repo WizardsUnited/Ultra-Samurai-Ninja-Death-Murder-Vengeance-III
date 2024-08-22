@@ -104,6 +104,7 @@ public class StateMachine : MonoBehaviour
 
     protected virtual void ChangeState(State newState)
     {
+        //need to change this so can theoertically re-enter same state, like for being hit
         if (!currentState.GetIsLocked()) // if (unlocked state) { switch freely }
         {
             if (newState != currentState) // Change state may be called more times than neccersary 

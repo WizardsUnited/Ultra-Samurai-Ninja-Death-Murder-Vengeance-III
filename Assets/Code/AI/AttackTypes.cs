@@ -6,6 +6,7 @@ namespace AttackTypes
 {
     public interface IAttackType
     {
+        //some hitbox and time data to funnel to attack, for now simple attacks.
         bool ExecuteAttack();
     }
 

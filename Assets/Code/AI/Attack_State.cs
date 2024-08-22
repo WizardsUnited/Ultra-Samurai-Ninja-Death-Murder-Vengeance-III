@@ -37,6 +37,8 @@ public class Attack_State : State
 
         timer += Time.deltaTime;
 
+        //Physics.Overlap from IAttack data. consider whether frame data should be here or there
+
         //if (attackType != null && !isAttackFinished) 
         //{
         //    isAttackFinished = attackType.ExecuteAttack();
