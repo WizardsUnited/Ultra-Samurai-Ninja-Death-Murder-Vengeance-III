@@ -8,6 +8,8 @@ public class Block_State : State
     {
         base.Enter();
         Debug.Log("Entering Block State");
+
+        animator.Play("Block");
     }
 
     public override void Execute()

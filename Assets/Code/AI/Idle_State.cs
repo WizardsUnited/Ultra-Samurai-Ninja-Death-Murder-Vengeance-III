@@ -8,6 +8,8 @@ public class Idle_State : State
     {
         base.Enter();
         Debug.Log("Entering Idle State");
+
+        animator.Play("Idle");
     }
 
     public override void Execute()

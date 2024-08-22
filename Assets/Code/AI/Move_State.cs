@@ -20,6 +20,8 @@ public class Move_State : State
     {
         base.Enter();
         Debug.Log("Entering Move State");
+
+        animator.Play("Move");
     }
 
     public override void Execute()

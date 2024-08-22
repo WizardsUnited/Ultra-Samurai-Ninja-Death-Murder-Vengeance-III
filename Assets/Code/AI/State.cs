@@ -9,6 +9,9 @@ public class State : MonoBehaviour
     public bool GetIsLocked() { return m_isLocked; }
 
     public Action OnExit;
+    public Animator animator;
+
+    public float stateDuration;
 
     public virtual void Enter()
     {

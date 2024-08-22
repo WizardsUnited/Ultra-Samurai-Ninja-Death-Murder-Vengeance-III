@@ -22,6 +22,19 @@ public class Attack_State : State
 
     public override void Enter()
     {
+        stateDuration = 1.5f;
+        animator.Play("Attack");
+        animator.Update(0);
+
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        float clipLength = stateInfo.length;
+
+        // Calculate the required playback speed to match the state duration
+        float playbackSpeed = clipLength / stateDuration;
+
+        // Set the animator speed to match the desired state duration
+        animator.speed = playbackSpeed;
+
         base.Enter();
         Debug.Log("Entering Attack State");
 
@@ -44,7 +57,7 @@ public class Attack_State : State
         //    isAttackFinished = attackType.ExecuteAttack();
         //}
 
-        if (timer >= 1f)
+        if (timer >= stateDuration)
         {
             timer = 0f;
             Exit();
@@ -55,6 +68,8 @@ public class Attack_State : State
     {
         isAttackStarted = false;
         isAttackFinished = false;
+
+        animator.speed = 1f;
 
         Debug.Log("Exiting Attack State");
         base.Exit();

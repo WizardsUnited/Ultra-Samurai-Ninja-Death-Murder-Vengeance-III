@@ -11,6 +11,19 @@ public class Roll_State : State
 
     public override void Enter()
     {
+        stateDuration = 1f;
+        animator.Play("Roll");
+        animator.Update(0);
+
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        float clipLength = stateInfo.length;
+
+        // Calculate the required playback speed to match the state duration
+        float playbackSpeed = clipLength / stateDuration;
+
+        // Set the animator speed to match the desired state duration
+        animator.speed = playbackSpeed;
+
         base.Enter();
         Debug.Log("Entering Roll State");
     }
@@ -24,7 +37,7 @@ public class Roll_State : State
         base.Execute();
         Debug.Log("Executing Roll State");
 
-        if (timer >= 1f)
+        if (timer >= stateDuration)
         {
             timer = 0f;
             Exit();
@@ -33,6 +46,8 @@ public class Roll_State : State
 
     public override void Exit()
     {
+        animator.speed = 1f;
+
         Debug.Log("Exiting Roll State");
         base.Exit();
     }
