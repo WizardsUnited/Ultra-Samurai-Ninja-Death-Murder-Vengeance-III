@@ -2,8 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Roll_State : State
+public class Dash_State : State
 {
+    [SerializeField]
+    protected float moveSpeed = 5f;
+
+    protected Rigidbody rb;
+    protected Vector3 movement;
+    public void SetMovementVector(Vector3 _movement) { movement = _movement; }
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+
     private void Awake()
     {
         m_isLocked = true;
@@ -25,7 +37,7 @@ public class Roll_State : State
         animator.speed = playbackSpeed;
 
         base.Enter();
-        Debug.Log("Entering Roll State");
+        Debug.Log("Entering Dash State");
     }
 
     float timer = 0f;
@@ -34,8 +46,14 @@ public class Roll_State : State
     {
         timer += Time.deltaTime;
 
+        rb.velocity = transform.forward * moveSpeed * 1.5f;
+        //transform.forward = movement.normalized;
+
         base.Execute();
-        Debug.Log("Executing Roll State");
+        Debug.Log("Executing Dash State");
+
+        //joint keypress to execute charge/curved slash. again, just conceptual for what is necessary, like joint keypresses for combos/certain activations
+
 
         if (timer >= stateDuration)
         {
@@ -48,7 +66,7 @@ public class Roll_State : State
     {
         animator.speed = 1f;
 
-        Debug.Log("Exiting Roll State");
+        Debug.Log("Exiting Dash State");
         base.Exit();
     }
 }

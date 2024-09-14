@@ -11,7 +11,9 @@ public class Evade_State : State
 
     public override void Enter()
     {
-        stateDuration = 1f;
+        machine.isEvading = true;
+
+        stateDuration = .3f;
         animator.Play("Evade");
         animator.Update(0);
 
@@ -34,6 +36,11 @@ public class Evade_State : State
     {
         timer += Time.deltaTime;
 
+        //"not effectable" through hitbox shit. i-frames. otherwise, effects could be applied, considering superarmor/misc
+
+        //parry area and some auxproc for activating some sub-state and theoertically adding hitbox/action/interaction efect that is parry
+        //^predicated by "can effect other things states"
+
         base.Execute();
         Debug.Log("Executing Evade State");
 
@@ -45,6 +52,8 @@ public class Evade_State : State
 
     public override void Exit()
     {
+        machine.isEvading = false;
+
         animator.speed = 1f;
 
         Debug.Log("Exiting Evade State");

@@ -29,14 +29,36 @@ public class Move_State : State
         base.Execute();
         Debug.Log("Executing Move State");
 
+        if (currentPhase == StatePhase.Start)
+        {
+            rb.velocity = movement * moveSpeed *.5f;
+            transform.forward = movement.normalized;
+        }
+        else if (currentPhase == StatePhase.End)
+        {
+            rb.velocity = movement * moveSpeed;
+            transform.forward = movement.normalized;
+        }
+
         //print(movement);
-        rb.velocity = movement * moveSpeed;
-        transform.forward = movement.normalized;
+
     }
 
     public override void Exit()
     {
         Debug.Log("Exiting Move State");
         base.Exit();
+    }
+
+    public override void UpdatePhase()
+    {
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            currentPhase = StatePhase.End;
+        }
+        else
+        {
+            currentPhase = StatePhase.Start;
+        }
     }
 }

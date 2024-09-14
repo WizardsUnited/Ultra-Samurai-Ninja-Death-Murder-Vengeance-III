@@ -29,6 +29,10 @@ public class Player_StateMachine : StateMachine
 
         movement = new Vector3(moveX, 0.0f, moveZ).normalized;
 
+        if (isHit)
+        {
+            IsHitCheck();
+        }
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -41,7 +45,9 @@ public class Player_StateMachine : StateMachine
             ChangeState(attack);
         }
         //roll
-        else if (Input.GetKeyDown(KeyCode.R)) {
+        else if (Input.GetKeyDown(KeyCode.R))
+        {
+            roll.SetMovementVector(movement);
             ChangeState(roll);
         }
         //block/parry

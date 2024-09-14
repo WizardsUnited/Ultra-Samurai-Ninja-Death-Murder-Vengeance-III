@@ -1,15 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 public class Hit_State : State
 {
     private void Awake()
     {
         m_isLocked = true;
+        isRepeatable = true;
     }
 
   
@@ -51,6 +49,9 @@ public class Hit_State : State
     public override void Exit()
     {
         animator.speed = 1f;
+        machine.isHit = false;
+
+        //ishit = false;
 
         Debug.Log("Exiting Hit State");
         base.Exit();

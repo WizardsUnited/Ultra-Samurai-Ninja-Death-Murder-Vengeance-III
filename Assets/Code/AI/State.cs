@@ -5,13 +5,26 @@ using UnityEngine;
 
 public class State : MonoBehaviour
 {
+    //
     protected bool m_isLocked = false;
     public bool GetIsLocked() { return m_isLocked; }
+    public bool isRepeatable = false;
 
     public Action OnExit;
-    public Animator animator;
 
+    public bool superarmor = false, invincible = false, ghost = false;
+
+    //
+    public Animator animator;
     public float stateDuration;
+    protected float stateTime = 0f;
+    protected enum StatePhase { Start, Mid, End, Blocking, Deflecting, Deflected, Running, Walking, Parry }
+    protected StatePhase currentPhase = StatePhase.Start;
+    public StateMachine machine;
+
+    public GameObject target;
+
+    //parrying, blocking, etc.
 
     public virtual void Enter()
     {
@@ -24,7 +37,8 @@ public class State : MonoBehaviour
     /// </summary>
     public virtual void Execute()
     {
-
+        stateTime += Time.fixedDeltaTime;
+        UpdatePhase();
     }
 
     /// <summary>
@@ -34,6 +48,10 @@ public class State : MonoBehaviour
     public virtual void Exit()
     {
         OnExit?.Invoke();
+    }
+
+    public virtual void UpdatePhase()
+    {
     }
 }
 

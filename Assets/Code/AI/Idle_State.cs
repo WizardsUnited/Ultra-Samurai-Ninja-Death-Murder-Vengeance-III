@@ -15,6 +15,14 @@ public class Idle_State : State
     public override void Execute()
     {
         base.Execute();
+
+        if (currentPhase == StatePhase.Deflected)
+        {
+            //animation
+        }
+
+
+
         Debug.Log("Executing Idle State");
     }
 

@@ -9,6 +9,8 @@ public class Attack_State : State
     private bool isAttackFinished = false;
     private IAttackType attackType;
 
+
+
     public void SetAttackType(IAttackType _attackType)
     {
         if (!isAttackStarted) { attackType = _attackType; }
