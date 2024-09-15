@@ -20,6 +20,7 @@ public class Attack_State : State
     private void Awake()
     {
         m_isLocked = true;
+        superarmor = true;
     }
 
     public override void Enter()

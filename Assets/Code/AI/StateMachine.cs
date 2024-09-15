@@ -142,7 +142,7 @@ public class StateMachine : MonoBehaviour
         //set hitstun of target hit state
         ForceChangeState(target.hit);
 
-        //StartCoroutine(HandleHitEffect(otherEntity, hitPauseDuration));
+        StartCoroutine(FramePauseAfterHitCoroutine(hit_details.frameStun, 0f));
     }
 
     //gotta check if this is working correctly

@@ -7,6 +7,7 @@ public class Evade_State : State
     private void Awake()
     {
         m_isLocked = true;
+        ghost = true;
     }
 
     public override void Enter()
