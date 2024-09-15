@@ -22,6 +22,7 @@ public class StateMachine : MonoBehaviour
 
     public bool isHit = false; // /hit details
 
+    public Animator animator;
     //parrying: effect hit sender controlled/staggered, insta execute (and change state?)
     //block: effect hit sender block lag? (and change state. block lag during "blocking" state?)
     //evade: (change state to attack or evade_counter. with invincitiblity or enemy controlled)
@@ -110,21 +111,60 @@ public class StateMachine : MonoBehaviour
         m_swordHeavyAttack = new SwordHeavyAttack();
     }
 
-    public class HitDetails
+
+
+    public virtual void ApplyHitEffect(StateMachine target, HitDetails hit_details)
     {
-        public float damage;
-        public Vector3 direction;
-        public State sender_ToChange;
-        public State receiver_ToChange;
-        public float hitStun;
-        public float frameStun;
-        public int hit_id;
+        if (target.currentState.ghost)
+        {
+            //dont register hit? or just deacticvate box instead of a bool
+            return;
+        }
+        else if (target.currentState.invincible)
+        {
+            target.isHit = true;
 
-        public HitDetails(float _damage, Vector3 _direction, State _sender_ToChange, State _receiver_ToChange, float _hitStun, float _frameStun, int _hit_id) { damage = _damage; direction = _direction; sender_ToChange = _sender_ToChange; receiver_ToChange = _receiver_ToChange; hitStun = _hitStun; frameStun = _frameStun; hit_id = _hit_id; }
+            StartCoroutine(FramePauseAfterHitCoroutine(hit_details.frameStun, 0f));
+            //take hit
+            return;
+        }
+        else if (target.currentState.superarmor)
+        {
+            target.isHit = true;
 
+            StartCoroutine(FramePauseAfterHitCoroutine(hit_details.frameStun, 0f));
+            //take hit and damage
+            return;
+        }
+
+        target.hit.stateDuration = hit_details.hitStun;
+
+        //set hitstun of target hit state
+        ForceChangeState(target.hit);
+
+        //StartCoroutine(HandleHitEffect(otherEntity, hitPauseDuration));
     }
 
-    protected virtual void ApplyHitEffect(GameObject target, GameObject sender, HitDetails hit_details)
+    //gotta check if this is working correctly
+    private IEnumerator FramePauseAfterHitCoroutine(float duration, float pauseTimeScale)
+    {
+        // Ensure all hit effects are processed before pausing
+        yield return new WaitForEndOfFrame();
+
+        // Store the original time scale
+        float originalTimeScale = Time.timeScale;
+
+        // Set the time scale to the specified pause time scale (default is 0 for a complete stop)
+        Time.timeScale = pauseTimeScale;
+
+        // Wait for the specified duration in real time
+        yield return new WaitForSecondsRealtime(duration);
+
+        // Restore the original time scale
+        Time.timeScale = originalTimeScale;
+    }
+
+    public virtual void ApplyHitEffect( StateMachine target,  StateMachine sender, HitDetails hit_details)
     {
         //check somewhree for repeat attack box interaction 
         //check sender state details: (superarmor : take hit, take damage, no hitstun, 
@@ -132,24 +172,27 @@ public class StateMachine : MonoBehaviour
         //    ghost: take no hit) < will apply hit
         //effect not at all, or differently depending on the states processing details
 
-        if (currentState.ghost)
+        target.isHit = true;
+
+        if (target.currentState.ghost)
         {
             //dont register hit? or just deacticvate box instead of a bool
             return;
         }
-        else if (currentState.invincible)
+        else if (target.currentState.invincible)
         {
             //take hit
             return;
         }
-        else if (currentState.superarmor)
+        else if (target.currentState.superarmor)
         {
+            //take hit and damage
             return;
         }
 
+        ForceChangeState(target.hit);
+
         //this.GetComponent<Rigidbody>().velocity = hit_details.direction
-
-
 
         //resolve(
         //appyl damage / velocity
@@ -164,17 +207,15 @@ public class StateMachine : MonoBehaviour
         //skip framepause if necessary
 
 
-        ChangeState(hit);
-
         //ChangeState(hit);
     }
 
-        //parrying: effect hit sender controlled/staggered, insta execute (and change state?)
-        //block: effect hit sender block lag? (and change state. block lag during "blocking" state?)
-        //evade: (change state to attack or evade_counter. with invincitiblity or enemy controlled)
-        //superarmor/invincible: ignore hit (damage) //still want to registe hits in i-frames
+    //parrying: effect hit sender controlled/staggered, insta execute (and change state?)
+    //block: effect hit sender block lag? (and change state. block lag during "blocking" state?)
+    //evade: (change state to attack or evade_counter. with invincitiblity or enemy controlled)
+    //superarmor/invincible: ignore hit (damage) //still want to registe hits in i-frames
 
-        //otherwise, take some hit details sent and change state to hit/ stagger
+    //otherwise, take some hit details sent and change state to hit/ stagger
 
     protected virtual void ChangeState(State newState)
     {
@@ -190,13 +231,20 @@ public class StateMachine : MonoBehaviour
         if (!currentState.GetIsLocked()) // if (unlocked state) { switch freely } //currently hit wont go through locked states, but will still happen afterward as ishit is stored.
         {
             //more like, if currentstate not repeateable/restartable, then dont do
-            if (newState != currentState || currentState.isRepeatable == true) // Change state may be called more times than neccersary 
+            if (newState != currentState) // Change state may be called more times than neccersary 
             {
                 currentState.Exit();
                 currentState = newState;
                 currentState.Enter();
             }
         }
+    }
+
+    protected void ForceChangeState(State newState)
+    {
+        currentState.Exit();
+        currentState = newState;
+        currentState.Enter();
     }
 
     private void OnLockedStateExit()

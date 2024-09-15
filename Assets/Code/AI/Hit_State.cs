@@ -13,7 +13,6 @@ public class Hit_State : State
   
     public override void Enter()
     {
-        stateDuration = .5f;
         animator.Play("Hit");
         animator.Update(0);
 

@@ -8,7 +8,6 @@ public class EntityEffectorTest : MonoBehaviour
     Player_StateMachine state_machine;
 
 
-
     void Start()
     {
         state_machine = player.GetComponent<Player_StateMachine>();
@@ -16,9 +15,13 @@ public class EntityEffectorTest : MonoBehaviour
 
     void Update()
     {
+        HitDetails hit = new HitDetails(0, new Vector3(0, 0, 0), .33f, .1f, 0);
+
         if (Input.GetKeyDown(KeyCode.P))
         {
-            state_machine.isHit = true;
+            state_machine.ApplyHitEffect(state_machine, hit);
         }
     }
+
+
 }

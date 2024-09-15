@@ -12,8 +12,6 @@ public class Block_State : State
 
     public override void Enter()
     {
-        machine.isBlocking = true;
-
         base.Enter();
         Debug.Log("Entering Block State");
 
@@ -26,29 +24,52 @@ public class Block_State : State
         base.Execute();
         Debug.Log("Executing Block State");
 
-        //check for hit in this state
-
-        if (currentPhase == StatePhase.Blocking)
-        {
-            //something to do with resetting time of state is being left out i think
-            //check inputs for second press (AND during framepause period?
-            //animation change (before framepause)
-            //only lasts during framepause. goes into deflect back to block/other state or hasblocked_recovery/other state after framepause. so really this is just one frame animation as is, no transition in, transition out perhaps, but all just phase animations, still blocking and probably cancellable
-        }
-
-        if (currentPhase == StatePhase.Deflecting)
-        {
-            //animation change after blocking pose framestun phase. still blocking, still cancellabe
-        }
-
-        if (currentPhase == StatePhase.Start)
+        if (currentPhase == StatePhase.Start && machine.isHit)
         {
             Debug.Log("Parry");
             //change locked stuffs
 
             //apply hit to target(make target hit, put sender in cancelleable parry anim, framestun, hitstun, damage, velocity (all the hit resolution stuff is set to happen, but happens after the framestun occurs.)
 
+        }
 
+        //check for hit in this state
+        if (machine.isHit)
+        {
+            //reset
+            print("Blocked"); //change rotation, take different block damage, again, this stuff happens "before hitstun?"
+
+            currentPhase = StatePhase.Blocking;
+            machine.isHit = false;
+        }
+
+        // can just switch to whiff parry or something
+        if (currentPhase == StatePhase.Blocking)
+        {
+            //something to do with resetting time of state is being left out i think
+            //check inputs for second press (AND during framepause period?
+            //animation change (before framepause)
+            //only lasts during framepause. goes into deflect back to block/other state or hasblocked_recovery/other state after framepause. so really this is just one frame animation as is, no transition in, transition out perhaps, but all just phase animations, still blocking and probably cancellable
+
+            //handle inputs and check if to deflect during framestun/this phase of state
+            //some "time" fuckaround bullshit
+
+            m_isLocked = true; //so it can take inputs here?
+
+
+
+            print("blockingggggggg");
+            currentPhase = StatePhase.End; //or go back to idle block
+        }
+
+        if (currentPhase == StatePhase.End)
+        {
+            m_isLocked = false;
+        }
+
+        if (currentPhase == StatePhase.Deflecting)
+        {
+            //animation change after blocking pose framestun phase. still blocking, still cancellabe
         }
 
         //parry area and some auxproc for activating some sub-state and theoertically adding hitbox/action/interaction efect that is parry
@@ -61,9 +82,8 @@ public class Block_State : State
 
     public override void Exit()
     {
-        machine.isBlocking = false;
-
         stateTime = 0;
+        currentPhase = StatePhase.Start;
 
         Debug.Log("Exiting Block State");
         base.Exit();
@@ -77,13 +97,14 @@ public class Block_State : State
         {
             currentPhase = StatePhase.Start;
         }
-        else if (stateTime < stateDuration * 0.66f)
-        {
-            currentPhase = StatePhase.Mid;
-        }
-        else
-        {
-            currentPhase = StatePhase.End;
-        }
+
+        //else if (stateTime < stateDuration * 0.66f)
+        //{
+        //    currentPhase = StatePhase.Mid;
+        //}
+        //else
+        //{
+        //    currentPhase = StatePhase.End;
+        //}
     }
 }

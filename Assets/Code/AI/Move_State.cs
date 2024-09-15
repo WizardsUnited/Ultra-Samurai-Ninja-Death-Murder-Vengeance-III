@@ -31,7 +31,7 @@ public class Move_State : State
 
         if (currentPhase == StatePhase.Start)
         {
-            rb.velocity = movement * moveSpeed *.5f;
+            rb.velocity = movement * moveSpeed *.85f;
             transform.forward = movement.normalized;
         }
         else if (currentPhase == StatePhase.End)

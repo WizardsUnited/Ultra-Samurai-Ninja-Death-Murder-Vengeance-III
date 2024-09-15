@@ -11,8 +11,6 @@ public class Evade_State : State
 
     public override void Enter()
     {
-        machine.isEvading = true;
-
         stateDuration = .3f;
         animator.Play("Evade");
         animator.Update(0);
@@ -52,8 +50,6 @@ public class Evade_State : State
 
     public override void Exit()
     {
-        machine.isEvading = false;
-
         animator.speed = 1f;
 
         Debug.Log("Exiting Evade State");

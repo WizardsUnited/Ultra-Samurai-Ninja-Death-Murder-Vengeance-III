@@ -29,11 +29,6 @@ public class Player_StateMachine : StateMachine
 
         movement = new Vector3(moveX, 0.0f, moveZ).normalized;
 
-        if (isHit)
-        {
-            IsHitCheck();
-        }
-
         if (Input.GetMouseButtonDown(0))
         {
             attack.SetAttackType(m_swordLightAttack);
