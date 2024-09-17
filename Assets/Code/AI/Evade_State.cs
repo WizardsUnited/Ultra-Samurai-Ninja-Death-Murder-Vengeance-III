@@ -12,7 +12,7 @@ public class Evade_State : State
 
     public override void Enter()
     {
-        stateDuration = .3f;
+        stateDuration = .4f;
         animator.Play("Evade");
         animator.Update(0);
 
